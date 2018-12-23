@@ -14,12 +14,12 @@ import torch.nn as nn
 GAME = 'bird' # the name of the game being played for log files
 ACTIONS = 2 # number of valid actions
 GAMMA = 0.99 # decay rate of past observations
-OBSERVE = 100000. # timesteps to observe before training
+OBSERVE = 1000. # timesteps to observe before training
 EXPLORE = 2000000. # frames over which to anneal epsilon
 FINAL_EPSILON = 0.0001 # final value of epsilon
 INITIAL_EPSILON = 0.0001 # starting value of epsilon
 REPLAY_MEMORY = 50000 # number of previous transitions to remember
-BATCH = 32 # size of minibatch
+BATCH_SIZE = 32 # size of minibatch
 FRAME_PER_ACTION = 1
 UPDATE_TIME = 100
 width = 80
@@ -113,6 +113,7 @@ class BrainDQNMain(object):
         state_batch_tensor=Variable(torch.Tensor(state_batch))
         y_batch_tensor=Variable(torch.Tensor(y_batch))
         y_predict=self.Q_net(state_batch_tensor).gather(1,action_batch_tensor)
+        pdb.set_trace()
         loss=self.loss_func(y_predict,y_batch_tensor)
         print("loss is "+str(loss))
         self.optimizer.zero_grad()
@@ -168,7 +169,8 @@ class BrainDQNMain(object):
         self.currentState = np.stack((observation, observation, observation, observation),axis=0)
         print(self.currentState.shape)
 
-def playFlappyBird(): # Step 1: init BrainDQN
+if __name__ == '__main__': 
+    # Step 1: init BrainDQN
     actions = 2
     brain = BrainDQNMain(actions) # Step 2: init Flappy Bird Game
     flappyBird = game.GameState() # Step 3: play game
@@ -186,9 +188,3 @@ def playFlappyBird(): # Step 1: init BrainDQN
         nextObservation = preprocess(nextObservation)
         #print(nextObservation.shape)
         brain.setPerception(nextObservation,action,reward,terminal)
-
-def main():
-    playFlappyBird()
-
-if __name__ == '__main__':
-    main()
