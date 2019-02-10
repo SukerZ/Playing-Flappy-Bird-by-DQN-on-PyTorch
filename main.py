@@ -113,7 +113,6 @@ class BrainDQNMain(object):
         state_batch_tensor=Variable(torch.Tensor(state_batch))
         y_batch_tensor=Variable(torch.Tensor(y_batch))
         y_predict=self.Q_net(state_batch_tensor).gather(1,action_batch_tensor)
-        pdb.set_trace()
         loss=self.loss_func(y_predict,y_batch_tensor)
         print("loss is "+str(loss))
         self.optimizer.zero_grad()
